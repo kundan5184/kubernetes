@@ -1,0 +1,24 @@
+1. check pods: kubectl get pods -n <namespace>. Pod should be up and running.
+
+2. To see all your services, you can use a simple command like this one where we can see all pods:
+    kubectl get svc -n "namespace". Service should be up and running as nodeport.
+    
+3. If the service you are looking for doesn’t exist, you can create it by using this command:
+    kubectl expose deployment <your-deployment-name> --type="NodePort" --port=3000 service <svcname> exposed
+    If you already have a service, you should look at its configuration and see if the problem is there.
+    
+4. Describe service:
+    kubectl describe service <your-service-name>
+    
+    Check if you used the right NodePort to access the container and that you have endpoints.
+    If you see some false information (like no endpoints), try to re-create the service and double check your kubectl expose command.
+    
+5. Please check, Is kube-proxy running?
+   ps auxw | grep kube-proxy
+   
+6. Check Iptables mode:
+    iptables-save | grep hostnames
+    For each port of each Service, there should be 1 rule in KUBE-SERVICES and one KUBE-SVC-<hash> chain. For each Pod endpoint, 
+    there should be a small number of rules in that KUBE-SVC-<hash> and one KUBE-SEP-<hash> chain with a small number of rules in it.
+    The exact rules will vary based on your exact config (including node-ports and load-balancers).
+   
