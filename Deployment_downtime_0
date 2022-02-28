@@ -1,0 +1,19 @@
+1. Open deployement.yaml 
+2. Increase replicas to 2
+3. run kubectl apply -f deployment.yaml
+4. Again go to yaml file and reduce replicas to 1.
+5. run kubectl apply -f deployment.yaml
+
+OR
+##Directly modify deployment strategies into deployment.yaml file
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+
+maxUnavailable(0)==> Means system should've 0 pod unavailable any particulaer time.
+maxSurge(1)==>It means system can have max 1 pod runing at any time.
+So kubernetes will deploye new version by incrementing/decrementing old version to new version internally to achieve 0 downtime.
